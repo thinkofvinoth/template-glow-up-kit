@@ -43,15 +43,15 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
   attachments = []
 }) => {
   const EmailAddressList = ({ emails, label }: { emails: string[], label: string }) => (
-    <div className="mb-3">
+    <div className="email-address-row">
       <div className="flex items-start gap-2">
-        <span className="font-semibold text-gray-700 min-w-[40px] mt-1">{label}:</span>
+        <span className="email-address-label">{label}:</span>
         <div className="flex-1">
-          <div className="flex flex-wrap gap-1">
+          <div className="email-tags-container">
             {emails.map((email, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-sm border border-blue-200"
+                className="email-tag"
               >
                 <Mail className="h-3 w-3" />
                 {email}
@@ -92,17 +92,19 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white font-sans">
+    <div className="email-template">
       {/* Email Header */}
-      <div className="bg-slate-50 border-b border-gray-200 p-6">
+      <div className="email-header">
         <div className="space-y-4">
           {/* From Email */}
-          <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
-            <span className="font-semibold text-gray-700">From:</span>
-            <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-md text-sm border border-green-200">
-              <Mail className="h-3 w-3" />
-              {fromEmail}
-            </span>
+          <div className="email-divider">
+            <div className="flex items-center gap-2">
+              <span className="email-address-label">From:</span>
+              <span className="email-tag from">
+                <Mail className="h-3 w-3" />
+                {fromEmail}
+              </span>
+            </div>
           </div>
 
           {/* To Emails */}
@@ -119,117 +121,119 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
           )}
 
           {/* Subject */}
-          <div className="pt-2 border-t border-gray-200">
+          <div className="subject-row">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-700">Subject:</span>
-              <span className="text-gray-900 font-medium">{subject}</span>
+              <span className="subject-label">Subject:</span>
+              <span className="subject-text">{subject}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Email Content */}
-      <div className="p-6">
-        <div className="mb-6">
-          <p className="text-gray-600 mb-2">
+      <div className="email-content">
+        <div className="content-intro">
+          <p className="intro-text">
             Dear {recipientName},
           </p>
-          <p className="text-gray-600">
+          <p className="intro-text">
             Please find the trading report below with detailed transaction information and export data.
           </p>
         </div>
 
         {/* Attachments Section */}
         {attachments.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Attachments ({attachments.length})</h3>
-            <Card className="p-4">
-              <div className="grid gap-3">
-                {attachments.map((attachment, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-blue-600">
-                        {getFileIcon(attachment.type)}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{attachment.name}</p>
-                        <p className="text-sm text-gray-500">{attachment.size}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleDownload(attachment)}
-                      className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+          <div className="attachments-section">
+            <h3 className="attachments-title">Attachments ({attachments.length})</h3>
+            <div className="card">
+              <div className="card-content">
+                <div className="attachments-grid">
+                  {attachments.map((attachment, index) => (
+                    <div
+                      key={index}
+                      className="attachment-item"
                     >
-                      <Download className="h-4 w-4" />
-                      Download
-                    </button>
-                  </div>
-                ))}
+                      <div className="attachment-info">
+                        <div className="attachment-icon">
+                          {getFileIcon(attachment.type)}
+                        </div>
+                        <div>
+                          <p className="attachment-name">{attachment.name}</p>
+                          <p className="attachment-size">{attachment.size}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleDownload(attachment)}
+                        className="download-button"
+                      >
+                        <Download className="h-4 w-4" />
+                        Download
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </Card>
+            </div>
           </div>
         )}
 
         {/* Trading Data Table */}
-        <Card className="overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+        <div className="card">
+          <div className="table-container">
+            <table className="data-table">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-header-cell">
                     GILTSI Market Region
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Transaction Domain
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Status Category
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Broker Contact
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Phone Numbers
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Firm Root ID
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="table-header-cell">
                     Transaction ID
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="table-body">
                 {tradeData.map((trade, index) => (
-                  <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 text-sm text-gray-900">
+                  <tr key={index} className="table-row">
+                    <td className="table-cell">
                       {trade.giltsi}
                     </td>
-                    <td className="px-4 py-3 text-sm text-blue-600 font-mono">
+                    <td className="table-cell font-mono text-blue-600">
                       {trade.transactionDomain}
                     </td>
-                    <td className="px-4 py-3 text-sm">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    <td className="table-cell">
+                      <span className={`status-badge ${
                         trade.statusCategory.includes('Description') 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-yellow-100 text-yellow-800'
+                          ? 'description' 
+                          : 'other'
                       }`}>
                         {trade.statusCategory}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
+                    <td className="table-cell text-gray-600">
                       {trade.brokerEmailIds}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
+                    <td className="table-cell text-gray-600">
                       {trade.brokerPhoneNumbers}
                     </td>
-                    <td className="px-4 py-3 text-sm font-mono text-blue-600">
+                    <td className="table-cell font-mono text-blue-600">
                       {trade.firmRootId}
                     </td>
-                    <td className="px-4 py-3 text-sm font-mono text-green-600">
+                    <td className="table-cell font-mono text-green-600">
                       {trade.transactionId}
                     </td>
                   </tr>
@@ -237,26 +241,26 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
               </tbody>
             </table>
           </div>
-        </Card>
+        </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <p className="text-sm text-gray-600 mb-2">
+        <div className="email-footer">
+          <p className="footer-text">
             If you have any questions regarding this report, please don't hesitate to contact our trading desk.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="footer-subtext">
             This is an automated report generated by the CSWISE trading system.
           </p>
         </div>
       </div>
 
       {/* Email Signature */}
-      <div className="bg-gray-50 border-t border-gray-200 p-6">
-        <div className="text-sm text-gray-600">
-          <p className="font-semibold text-gray-900 mb-1">Trading Operations Team</p>
+      <div className="email-signature">
+        <div className="signature-content">
+          <p className="signature-name">Trading Operations Team</p>
           <p>CSWISE Financial Services</p>
           <p>Email: trading@cswise.com | Phone: +1 (555) 123-4567</p>
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="signature-disclaimer">
             This email contains confidential and proprietary information. If you are not the intended recipient, 
             please notify the sender immediately and delete this email.
           </p>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EmailTemplate from '../components/EmailTemplate';
 
@@ -97,11 +98,11 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
-      <div className="container mx-auto px-4">
+    <div className="page-container">
+      <div className="container">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Professional Email Template</h1>
-          <p className="text-gray-600">Modern, clean design for financial and trading communications</p>
+          <h1 className="page-title">Professional Email Template</h1>
+          <p className="page-subtitle">Modern, clean design for financial and trading communications</p>
         </div>
         
         <EmailTemplate
