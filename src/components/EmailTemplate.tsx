@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Mail } from 'lucide-react';
+import { Mail, Download, FileAudio, FileImage, FileVideo } from 'lucide-react';
 
 interface TradeData {
   giltsi: string;
@@ -14,6 +14,13 @@ interface TradeData {
   notes?: string;
 }
 
+interface Attachment {
+  name: string;
+  size: string;
+  type: 'document' | 'image' | 'audio' | 'video';
+  url?: string;
+}
+
 interface EmailTemplateProps {
   recipientName?: string;
   fromEmail?: string;
@@ -22,6 +29,7 @@ interface EmailTemplateProps {
   bccEmails?: string[];
   subject?: string;
   tradeData: TradeData[];
+  attachments?: Attachment[];
 }
 
 const EmailTemplate: React.FC<EmailTemplateProps> = ({
@@ -31,7 +39,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
   ccEmails = [],
   bccEmails = [],
   subject = "CSWISE Trading Report",
-  tradeData
+  tradeData,
+  attachments = []
 }) => {
   const EmailAddressList = ({ emails, label }: { emails: string[], label: string }) => (
     <div className="mb-3">
@@ -53,6 +62,34 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
       </div>
     </div>
   );
+
+  const getFileIcon = (type: string) => {
+    switch (type) {
+      case 'image':
+        return <FileImage className="h-4 w-4" />;
+      case 'audio':
+        return <FileAudio className="h-4 w-4" />;
+      case 'video':
+        return <FileVideo className="h-4 w-4" />;
+      default:
+        return <Download className="h-4 w-4" />;
+    }
+  };
+
+  const handleDownload = (attachment: Attachment) => {
+    if (attachment.url) {
+      // Create a temporary link element and trigger download
+      const link = document.createElement('a');
+      link.href = attachment.url;
+      link.download = attachment.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Fallback for demo purposes
+      console.log(`Downloading ${attachment.name}`);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto bg-white font-sans">
@@ -101,6 +138,40 @@ const EmailTemplate: React.FC<EmailTemplateProps> = ({
             Please find the trading report below with detailed transaction information and export data.
           </p>
         </div>
+
+        {/* Attachments Section */}
+        {attachments.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Attachments ({attachments.length})</h3>
+            <Card className="p-4">
+              <div className="grid gap-3">
+                {attachments.map((attachment, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="text-blue-600">
+                        {getFileIcon(attachment.type)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{attachment.name}</p>
+                        <p className="text-sm text-gray-500">{attachment.size}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDownload(attachment)}
+                      className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* Trading Data Table */}
         <Card className="overflow-hidden shadow-sm">

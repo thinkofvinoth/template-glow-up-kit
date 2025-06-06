@@ -1,4 +1,3 @@
-
 import React from 'react';
 import EmailTemplate from '../components/EmailTemplate';
 
@@ -70,6 +69,33 @@ const Index = () => {
     }
   ];
 
+  const sampleAttachments = [
+    {
+      name: "Trading_Report_2024.pdf",
+      size: "2.4 MB",
+      type: "document" as const,
+      url: "/placeholder.svg" // Demo URL
+    },
+    {
+      name: "Market_Analysis.xlsx",
+      size: "1.8 MB", 
+      type: "document" as const,
+      url: "/placeholder.svg" // Demo URL
+    },
+    {
+      name: "Transaction_Summary.csv",
+      size: "156 KB",
+      type: "document" as const,
+      url: "/placeholder.svg" // Demo URL
+    },
+    {
+      name: "Chart_Screenshot.png",
+      size: "892 KB",
+      type: "image" as const,
+      url: "/placeholder.svg" // Demo URL
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -85,6 +111,7 @@ const Index = () => {
           fromEmail="rishu.kumar@princbase.com"
           subject="CSWISE Trading Report - Daily Summary"
           tradeData={sampleTradeData}
+          attachments={sampleAttachments}
         />
       </div>
     </div>
